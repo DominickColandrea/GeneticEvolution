@@ -2,6 +2,7 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
+
 let frameCount= 0;
 let lastTime =0;
 let bird = new Bird();
@@ -29,7 +30,7 @@ function Bird() {
     this.y += this.velocity;
 
     if (this.y > canvas.height) {
-      this.y = canvas.height-10;
+      this.y = canvas.height-5;
       this.velocity =0;
     }
 
@@ -70,7 +71,7 @@ this.collide = function(bird) {
   this.update = function() {
     this.x -= this.speed;
   }
-}// end Bird
+}// end Pipe
 
 function draw() {
   ctx.fillStyle ="#000";
@@ -89,7 +90,6 @@ for (let i = 0; i < pipes.length; i++) {
     pipes[i].update();
 
 if (pipes[i].collide(bird)) {
-
 }
 
 }
