@@ -59,6 +59,12 @@ this.collide = function(bird) {
   }
 }
 
+this.offscreen = function() {
+  if (this.x<-40) {
+    return true;
+  }
+}
+
   this.show = function() {
     ctx.fillStyle ="#fff";
     if (this.highlight) {
@@ -85,9 +91,12 @@ pipes.push(new Pipe());
 }
 
 
-for (let i = 0; i < pipes.length; i++) {
+for (let i = pipes.length-1; i >= 0; i--) {
   pipes[i].show();
     pipes[i].update();
+if (pipes[i].offscreen()) {
+    pipes.splice(i,1);
+}
 
 if (pipes[i].collide(bird)) {
 }
