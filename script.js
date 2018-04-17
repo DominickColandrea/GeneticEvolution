@@ -11,7 +11,6 @@ pipes.push(new Pipe());
 function Bird() {
   this.x = 20;
   this.y = canvas.height/2;
-  this.x = 20;
   this.gravity =0.2;
   this.velocity = 0.4;
   this.lift =30;
@@ -22,7 +21,7 @@ function Bird() {
 
   this.show = function() {
     ctx.fillStyle ="#f9ff59";
-    ctx.fillRect(this.x,this.y, this.x, 20);
+    ctx.fillRect(this.x,this.y, this.x, 10);
   }
 
   this.update = function() {
@@ -48,10 +47,22 @@ function Pipe() {
   this.w =20;
   this.x = canvas.width;
   this.speed =1;
+  this.highlight = false;
 
+this.collide = function(bird) {
+  if (bird.y < this.top || bird.y+5 > canvas.height - this.bottom) {
+    if (bird.x+20 > this.x && bird.x < this.x + this.w) {
+      this.highlight =true;
+      return true;
+    }
+  }
+}
 
   this.show = function() {
     ctx.fillStyle ="#fff";
+    if (this.highlight) {
+      ctx.fillStyle ="#ff1111";
+    }
     ctx.fillRect(this.x,0, this.w, this.top);
     ctx.fillRect(this.x, canvas.height -this.bottom, this.w, this.bottom);
   }
@@ -76,6 +87,11 @@ pipes.push(new Pipe());
 for (let i = 0; i < pipes.length; i++) {
   pipes[i].show();
     pipes[i].update();
+
+if (pipes[i].collide(bird)) {
+
+}
+
 }
 }//end draw
 
