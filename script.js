@@ -12,7 +12,7 @@ pipes.push(new Pipe());
 function Bird() {
   this.x = 20;
   this.y = canvas.height/2;
-  this.gravity =0.2;
+  this.gravity =0.1;
   this.velocity = 0.4;
   this.lift =30;
 
@@ -112,11 +112,11 @@ draw();
 requestAnimationFrame(update);
 }//end update
 
-document.addEventListener('keydown',event =>{
-if(event.keyCode ==32){
- bird.up();
-}
-});//end addEventListener
+// document.addEventListener('keydown',event =>{
+// if(event.keyCode ==32){
+//  bird.up();
+// }
+// });//end addEventListener
 
 
 update();
