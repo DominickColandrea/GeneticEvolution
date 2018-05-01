@@ -7,20 +7,44 @@ const TOTAL = 250;
 let frameCount= 0;
 let lastTime =0;
 let birds=[];
+let deadBirds =[];
 
 for (let i = 0; i < TOTAL; i++) {
   birds[i] = new Bird();
 }
 let pipes =[];
 pipes.push(new Pipe());
-function Bird() {
+
+function mutate(x) {
+  if (Math.random() < 0.1) {
+    let offset =x * 0.5;
+    let newx = x + offset;
+    return newx;
+  } else {
+    return x;
+  }
+}
+
+function Bird(brain) {
   this.x = 20;
   this.y = canvas.height/2;
   this.gravity =0.1;
   this.velocity = 0.4;
   this.lift =30;
 
-  this.brain = new NeuralNetwork(4,4,1); //4 inputs 1 output
+  this.score = 0;
+  this.fitness = 0;
+
+if (brain) {
+  this.brain = brain.copy();
+}
+else {
+this.brain = new NeuralNetwork(4,4,1); //4 inputs 1 output
+}
+
+this.mutate = function(){
+  this.brain.mutate(mutate);
+}
 
   this.up = function() {
     this.velocity -= this.gravity*this.lift;
@@ -54,6 +78,7 @@ closest = pipes[1];
 }
 
   this.update = function() {
+    this.score++;
     this.velocity += this.gravity;
     this.y += this.velocity;
 
@@ -71,14 +96,15 @@ closest = pipes[1];
 }// end Bird
 
 function Pipe() {
-  this.top = Math.random() * (canvas.height/2 - 1) + 1;
-  this.bottom = Math.random() * (canvas.height/2 - 1) + 1;
+  this.minWidth=70; //work on this
+  this.top = Math.random() * (canvas.height/2 - this.minWidth) + 40;
+  this.bottom = Math.random() * (canvas.height/2 - this.minWidth) + 40;
   this.w =20;
   this.x = canvas.width;
   this.speed =1;
   this.highlight = false;
 
-this.collide = function(bird) {///////problem child
+this.collide = function(bird) {
 
   if (bird.y < this.top || bird.y+5 > canvas.height - this.bottom) {
     if (bird.x+20 > this.x && bird.x < this.x + this.w) {
@@ -134,7 +160,7 @@ for (let i = pipes.length-1; i >= 0; i--) {
 
     for (let j = birds.length-1; j>=0; j--) {
       if (pipes[i].collide(birds[j])) {
-        birds.splice(j,1);
+        deadBirds.push(birds.splice(j,1)[0]);
       }
     }
 
