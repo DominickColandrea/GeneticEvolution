@@ -117,6 +117,11 @@ function draw() {
   bird.update();
   bird.show();
 }
+
+if (birds.length ===0) {
+  nextGen();
+}
+
 if (frameCount > 130) {
   frameCount =0;
 pipes.push(new Pipe());
