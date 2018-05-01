@@ -2,13 +2,17 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
+const TOTAL = 250;
 
 let frameCount= 0;
 let lastTime =0;
-let bird = new Bird();
+let birds=[];
+
+for (let i = 0; i < TOTAL; i++) {
+  birds[i] = new Bird();
+}
 let pipes =[];
 pipes.push(new Pipe());
-
 function Bird() {
   this.x = 20;
   this.y = canvas.height/2;
@@ -29,9 +33,11 @@ function Bird() {
 
 this.think = function(pipes) {
 let closest = pipes[0];
-if (bird.x > pipes[0].x){
+
+if (20 > pipes[0].x){//try not to hard code this
 closest = pipes[1];
 }
+
 
 
     let inputs = [];
@@ -72,13 +78,15 @@ function Pipe() {
   this.speed =1;
   this.highlight = false;
 
-this.collide = function(bird) {
+this.collide = function(bird) {///////problem child
+
   if (bird.y < this.top || bird.y+5 > canvas.height - this.bottom) {
     if (bird.x+20 > this.x && bird.x < this.x + this.w) {
       this.highlight =true;
       return true;
     }
   }
+
 }
 
 this.offscreen = function() {
@@ -104,10 +112,11 @@ this.offscreen = function() {
 function draw() {
   ctx.fillStyle ="#000";
   ctx.fillRect(0,0, canvas.width, canvas.height);
+  for (let bird of birds){
   bird.think(pipes);
   bird.update();
   bird.show();
-
+}
 if (frameCount > 130) {
   frameCount =0;
 pipes.push(new Pipe());
@@ -117,12 +126,17 @@ pipes.push(new Pipe());
 for (let i = pipes.length-1; i >= 0; i--) {
   pipes[i].show();
     pipes[i].update();
+
+    for (let j = birds.length-1; j>=0; j--) {
+      if (pipes[i].collide(birds[j])) {
+        birds.splice(j,1);
+      }
+    }
+
 if (pipes[i].offscreen()) {
     pipes.splice(i,1);
 }
 
-if (pipes[i].collide(bird)) {
-}
 
 }
 }//end draw
