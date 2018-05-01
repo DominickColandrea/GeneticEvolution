@@ -3,7 +3,6 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
 const TOTAL = 250;
-
 let frameCount= 0;
 let lastTime =0;
 let birds=[];
@@ -16,7 +15,7 @@ let pipes =[];
 pipes.push(new Pipe());
 
 function mutate(x) {
-  if (Math.random() < 0.1) {
+  if (Math.random() < 0.01) {
     let offset =x * 0.5;
     let newx = x + offset;
     return newx;
