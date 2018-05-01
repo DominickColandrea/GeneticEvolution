@@ -16,6 +16,8 @@ function Bird() {
   this.velocity = 0.4;
   this.lift =30;
 
+  this.brain = new NeuralNetwork(4,4,1); //4 inputs 1 output
+
   this.up = function() {
     this.velocity -= this.gravity*this.lift;
   }
@@ -24,6 +26,26 @@ function Bird() {
     ctx.fillStyle ="#f9ff59";
     ctx.fillRect(this.x,this.y, this.x, 10);
   }
+
+this.think = function(pipes) {
+let closest = pipes[0];
+if (bird.x > pipes[0].x){
+closest = pipes[1];
+}
+
+
+    let inputs = [];
+    inputs[0] = this.y / canvas.height;
+    inputs[1] = closest.top / canvas.height;
+    inputs[2] = closest.bottom / canvas.height;
+    inputs[3] = closest.x / canvas.width;
+
+    let output = this.brain.predict(inputs);
+
+    if (output[0] > 0.5) {
+      this.up();
+    }
+}
 
   this.update = function() {
     this.velocity += this.gravity;
@@ -82,10 +104,11 @@ this.offscreen = function() {
 function draw() {
   ctx.fillStyle ="#000";
   ctx.fillRect(0,0, canvas.width, canvas.height);
+  bird.think(pipes);
   bird.update();
   bird.show();
 
-if (frameCount > 100) {
+if (frameCount > 130) {
   frameCount =0;
 pipes.push(new Pipe());
 }
