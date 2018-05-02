@@ -1,5 +1,7 @@
 function nextGen() {
-
+generation++;
+currentHighestFitness=0;
+document.getElementById('gen').innerText  = "Generation: "+generation;
   calculateFitness();
 
   for (let i = 0; i < TOTAL; i++) {

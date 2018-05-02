@@ -3,11 +3,14 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
 const TOTAL = 250;
+let generation =1;
 let frameCount= 0;
 let lastTime =0;
 let birds=[];
 let deadBirds =[];
-
+let birdHighestFitness =0;
+let currentHighestFitness =0;
+document.getElementById('gen').innerText  = "Generation: "+generation;
 for (let i = 0; i < TOTAL; i++) {
   birds[i] = new Bird();
 }
@@ -57,7 +60,7 @@ this.mutate = function(){
 this.think = function(pipes) {
 let closest = pipes[0];
 
-if (20 > pipes[0].x){//try not to hard code this
+if (0 > pipes[0].x){//try not to hard code this
 closest = pipes[1];
 }
 
@@ -141,6 +144,12 @@ function draw() {
   bird.think(pipes);
   bird.update();
   bird.show();
+document.getElementById('birdsLeft').innerText  = "Birds Left: "+birds.length;
+  if (bird.score > birdHighestFitness) {
+    document.getElementById('fitness').innerText  = "Max Fitness: "+bird.score;
+    birdHighestFitness = bird.score;
+  }
+  document.getElementById('current').innerText  = "Current Fitness: "+bird.score;
 }
 
 if (birds.length ===0) {
