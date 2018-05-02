@@ -2,7 +2,7 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
-const TOTAL = 250;
+const TOTAL = 500;
 let generation =1;
 let frameCount= 0;
 let lastTime =0;
