@@ -10,6 +10,7 @@ let birds=[];
 let deadBirds =[];
 let birdHighestFitness =0;
 let currentHighestFitness =0;
+let cycles =document.getElementById('slider');
 document.getElementById('gen').innerText  = "Generation: "+generation;
 for (let i = 0; i < TOTAL; i++) {
   birds[i] = new Bird();
@@ -98,7 +99,7 @@ closest = pipes[1];
 }// end Bird
 
 function Pipe() {
-  this.minWidth=70; //work on this
+  this.minWidth=70;
   this.top = Math.random() * (canvas.height/2 - this.minWidth) + 40;
   this.bottom = Math.random() * (canvas.height/2 - this.minWidth) + 40;
   this.w =20;
@@ -138,12 +139,26 @@ this.offscreen = function() {
 }// end Pipe
 
 function draw() {
-  ctx.fillStyle ="#000";
-  ctx.fillRect(0,0, canvas.width, canvas.height);
+
+  for (let n=0; n<cycles.value; n++){
+    frameCount++;
+    for (let i = pipes.length-1; i >= 0; i--) {
+        pipes[i].update();
+
+        for (let j = birds.length-1; j>=0; j--) {
+          if (pipes[i].collide(birds[j])) {
+            deadBirds.push(birds.splice(j,1)[0]);
+          }
+        }
+
+        if (pipes[i].offscreen()) {
+          pipes.splice(i,1);
+        }
+      }
+
   for (let bird of birds){
   bird.think(pipes);
   bird.update();
-  bird.show();
 document.getElementById('birdsLeft').innerText  = "Birds Left: "+birds.length;
   if (bird.score > birdHighestFitness) {
     document.getElementById('fitness').innerText  = "Max Fitness: "+bird.score;
@@ -162,26 +177,21 @@ pipes.push(new Pipe());
 }
 
 
-for (let i = pipes.length-1; i >= 0; i--) {
-  pipes[i].show();
-    pipes[i].update();
+}//end for cycles
 
-    for (let j = birds.length-1; j>=0; j--) {
-      if (pipes[i].collide(birds[j])) {
-        deadBirds.push(birds.splice(j,1)[0]);
-      }
-    }
+  //all the drawing
 
-if (pipes[i].offscreen()) {
-    pipes.splice(i,1);
+  ctx.fillStyle ="#000";
+  ctx.fillRect(0,0, canvas.width, canvas.height);
+for (let bird of birds){
+bird.show();
 }
-
-
+for (let pipe of pipes){
+  pipe.show();
 }
 }//end draw
 
 function update(time=0) {
-  frameCount++;
   const deltaTime = time - lastTime;
   lastTime =time;
 draw();
